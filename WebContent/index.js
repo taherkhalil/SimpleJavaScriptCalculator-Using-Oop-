@@ -18,7 +18,7 @@ var Calculator = function() {
 				console.log("yes");
 				clearDisplayBox();
 
-			} 
+			}
 			equalFlag = false;
 
 		}
@@ -27,34 +27,33 @@ var Calculator = function() {
 	}
 
 	function setDisplay(val) {
-		if (!flag){
-		 if ( isDisplayBoxEmpty() ) {
-		 if ( globals.regexForArthmaticOperations.test(val) )
-			 
-		 return;
-		 }
+		if (!flag) {
+			if (isDisplayBoxEmpty()) {
+				if (globals.regexForArthmaticOperations.test(val))
+
+					return;
+			}
 		}
 
 		if (val.match("=")) {
 			var displayBoxInput = parser.getDisplayBoxInput();
 			var parts = parser.parseValue(displayBoxValue);
 			operateOnInput(getInputArray());
-
 			equalFlag = true;
-			flag=true;
+			flag = true;
 
 			return;
 		}
 
 		if (val.match("Clear")) {
 			clearDisplayBox();
-			flag=false;
+			flag = false;
 			return;
 		}
 
 		if (globals.regexForArthmaticOperations.test(val)) {
 			var displayBox = document.getElementById("display_box");
-			displayBox.value += " " + val + " ";
+			displayBox.value += " " + val ;
 			return;
 		}
 
@@ -62,7 +61,23 @@ var Calculator = function() {
 	}
 
 	function operateOnInput(inputArray) {
-		var sum = 0, a, b;
+	
+//		if (globals.regexForArthmaticOperations
+//				.test(inputArray[inputArray.length - 2])
+//				&& globals.regexForArthmaticOperations
+//						.test(inputArray[inputArray.length - 4])){
+//			console.log("in multiple operators");
+//			inputArray.splice(inputArray.length - 4,4);
+//			
+//			globals.displayBox.value=inputArray;
+//			console.log("after slice" + inputArray);
+//			return;
+//		}
+//		if (globals.regexForArthmaticOperations
+//				.test(inputArray[inputArray.length - 1])){
+//			return;
+//		}
+			var sum = 0, a, b;
 		if (parser.parseValue(inputArray)) {
 			for (var i = 1; i < inputArray.length - 1; i += 2) {
 				b = parseInt(inputArray[i + 1]);
