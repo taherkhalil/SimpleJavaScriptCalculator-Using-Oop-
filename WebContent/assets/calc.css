@@ -1,0 +1,31 @@
+
+#calculator {
+	
+    border: solid black 1px;
+    display: inline-block;
+    padding: 4px;
+    border-radius: 4px;
+    direction: ltr;
+    table-layout: auto;
+   
+}
+#calculator input[type="text"] {
+    text-align: right;
+    position:static;
+    height: 33px;
+}
+#buttontable {
+    position:relative;
+    
+   
+}
+#buttontable button{
+    width: 32px;
+    height: 32px;
+    padding: 25px;
+ 
+}
+.header{
+	text-decoration: underline;
+	outline-color: maroon;
+}

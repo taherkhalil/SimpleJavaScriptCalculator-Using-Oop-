@@ -27,11 +27,13 @@ var Calculator = function() {
 	}
 
 	function setDisplay(val) {
-
-		// if ( isDisplayBoxEmpty() ) {
-		// if ( globals.regexForArthmaticOperations.test(val) )
-		// return;
-		// }
+		if (!flag){
+		 if ( isDisplayBoxEmpty() ) {
+		 if ( globals.regexForArthmaticOperations.test(val) )
+			 
+		 return;
+		 }
+		}
 
 		if (val.match("=")) {
 			var displayBoxInput = parser.getDisplayBoxInput();
@@ -39,12 +41,14 @@ var Calculator = function() {
 			operateOnInput(getInputArray());
 
 			equalFlag = true;
+			flag=true;
 
 			return;
 		}
 
 		if (val.match("Clear")) {
 			clearDisplayBox();
+			flag=false;
 			return;
 		}
 
