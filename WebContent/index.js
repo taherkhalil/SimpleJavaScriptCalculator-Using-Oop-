@@ -1,51 +1,54 @@
 window.onload = init;
 
 var globals = {
+	error : document.getElementById("error"),
 	displayBox : document.getElementById("display_box"),
 	regexForArthmaticOperations : new RegExp("[\+-\/\*\]"),
 	regexForDigitInLastPlace : new RegExp("[0-9]$"),
-
 	regexForArthmaticOperatorInLastPlace : new RegExp("[\+-\/\*\s]$")
 }
 
-flag = false;
-var equalFlag = false;
-
 var Calculator = function() {
+	var sum = 0, a, b;
+	flag = false;
+	var equalFlag = false;
 	Calculator.prototype.getInput = function() {
 		if (equalFlag) {
+			globals.error.innerHTML = "";
 			if (this.innerHTML.match(/[0-9]+/g)) {
 				console.log("yes");
 				clearDisplayBox();
-
 			}
 			equalFlag = false;
-
 		}
 		setDisplay(this.innerHTML);
 		console.log(globals.displayBox.value);
 	}
 
 	function setDisplay(val) {
+		var array = getInputArray();
 		if (!flag) {
 			if (isDisplayBoxEmpty()) {
 				if (globals.regexForArthmaticOperations.test(val))
-
 					return;
 			}
 		}
-
-		if (val.match("=")) {
-			var displayBoxInput = parser.getDisplayBoxInput();
-			var parts = parser.parseValue(displayBoxValue);
-			operateOnInput(getInputArray());
-			equalFlag = true;
-			flag = true;
-
+		if (validate.expressionChecker(array, val)) {
 			return;
 		}
 
-		if (val.match("Clear")) {
+		if (val.match("=")) {
+			if (array[array.length - 1] == "") {
+				return;
+			}
+
+			operateOnInput(getInputArray());
+			equalFlag = true;
+			flag = true;
+			return;
+		}
+
+		if (val.match("C")) {
 			clearDisplayBox();
 			flag = false;
 			return;
@@ -53,7 +56,7 @@ var Calculator = function() {
 
 		if (globals.regexForArthmaticOperations.test(val)) {
 			var displayBox = document.getElementById("display_box");
-			displayBox.value += " " + val ;
+			displayBox.value += " " + val + " ";
 			return;
 		}
 
@@ -61,62 +64,40 @@ var Calculator = function() {
 	}
 
 	function operateOnInput(inputArray) {
-	
-//		if (globals.regexForArthmaticOperations
-//				.test(inputArray[inputArray.length - 2])
-//				&& globals.regexForArthmaticOperations
-//						.test(inputArray[inputArray.length - 4])){
-//			console.log("in multiple operators");
-//			inputArray.splice(inputArray.length - 4,4);
-//			
-//			globals.displayBox.value=inputArray;
-//			console.log("after slice" + inputArray);
-//			return;
-//		}
-//		if (globals.regexForArthmaticOperations
-//				.test(inputArray[inputArray.length - 1])){
-//			return;
-//		}
-			var sum = 0, a, b;
+		sum=0;
 		if (parser.parseValue(inputArray)) {
 			for (var i = 1; i < inputArray.length - 1; i += 2) {
 				b = parseInt(inputArray[i + 1]);
 				switch (inputArray[i]) {
 				case "+":
-					console.log(inputArray[i]);
-					if (i == 1) {
-						a = parseInt(inputArray[i - 1]);
-						sum += add(a, b);
-					} else
-						sum = add(sum, b);
-					console.log("iteration " + i + ":" + sum);
+					sum = doOperation(add,i,inputArray,a,b);
 					break;
 				case "-":
-					console.log(inputArray[i]);
+
 					if (i == 1) {
 						a = parseInt(inputArray[i - 1]);
 						sum -= subtract(a, b);
 					} else
 						sum = subtract(b, sum);
-					console.log("iteration " + i + ":" + sum);
+
 					break;
 				case "*":
-					console.log(inputArray[i]);
+
 					if (i == 1) {
 						a = parseInt(inputArray[i - 1]);
 						sum += mul(a, b);
 					} else
 						sum = mul(b, sum);
-					console.log("iteration " + i + ":" + sum);
+
 					break;
 				case "/":
-					console.log(inputArray[i]);
+
 					if (i == 1) {
 						a = parseInt(inputArray[i - 1]);
 						sum += div(a, b);
 					} else
 						sum = div(sum, b);
-					console.log("iteration " + i + ":" + sum);
+
 					break;
 				default:
 
@@ -124,11 +105,20 @@ var Calculator = function() {
 				}
 			}
 		}
-		;
+
 		clearDisplayBox();
 		setDisplay(sum + "");
 		flag = true;
 		return;
+	}
+	function doOperation(operation,i,inputArray,a,b) {
+		if (i == 1) {
+			a = parseInt(inputArray[i - 1]);
+			sum += operation(a, b);
+			return sum;
+		} else
+			sum = operation(sum, b);
+		return sum;
 	}
 
 	function getInputArray() {
@@ -172,7 +162,11 @@ function init() {
 
 function attachEventListener() {
 	var buttons = document.querySelectorAll("#btn");
+	//document.getElementById("btn").style.color="blue";
+	
 	for (var i = 0; i < buttons.length; i++) {
 		buttons[i].addEventListener("click", calc.getInput);
+		buttons[i].style.color = "blue";
 	}
+	
 }
