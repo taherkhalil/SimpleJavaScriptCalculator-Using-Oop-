@@ -64,43 +64,28 @@ var Calculator = function() {
 	}
 
 	function operateOnInput(inputArray) {
-		sum=0;
+		sum = 0;
 		if (parser.parseValue(inputArray)) {
 			for (var i = 1; i < inputArray.length - 1; i += 2) {
 				b = parseInt(inputArray[i + 1]);
 				switch (inputArray[i]) {
 				case "+":
-					sum = doOperation(add,i,inputArray,a,b);
+					sum = doOperation(add, i, inputArray, a, b);
 					break;
 				case "-":
-
 					if (i == 1) {
 						a = parseInt(inputArray[i - 1]);
 						sum -= subtract(a, b);
 					} else
 						sum = subtract(b, sum);
-
 					break;
 				case "*":
-
-					if (i == 1) {
-						a = parseInt(inputArray[i - 1]);
-						sum += mul(a, b);
-					} else
-						sum = mul(b, sum);
-
+					sum = doOperation(mul, i, inputArray, a, b);
 					break;
 				case "/":
-
-					if (i == 1) {
-						a = parseInt(inputArray[i - 1]);
-						sum += div(a, b);
-					} else
-						sum = div(sum, b);
-
+					sum = doOperation(div, i, inputArray, a, b);
 					break;
 				default:
-
 					break;
 				}
 			}
@@ -111,7 +96,7 @@ var Calculator = function() {
 		flag = true;
 		return;
 	}
-	function doOperation(operation,i,inputArray,a,b) {
+	function doOperation(operation, i, inputArray, a, b) {
 		if (i == 1) {
 			a = parseInt(inputArray[i - 1]);
 			sum += operation(a, b);
@@ -152,7 +137,6 @@ var Calculator = function() {
 	function div(x, y) {
 		return parseInt(x) / parseInt(y);
 	}
-
 }
 var calc = new Calculator();
 
@@ -162,11 +146,10 @@ function init() {
 
 function attachEventListener() {
 	var buttons = document.querySelectorAll("#btn");
-	//document.getElementById("btn").style.color="blue";
-	
+
 	for (var i = 0; i < buttons.length; i++) {
 		buttons[i].addEventListener("click", calc.getInput);
 		buttons[i].style.color = "blue";
 	}
-	
+
 }
